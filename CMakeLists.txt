@@ -4,8 +4,19 @@ project(BinanceOrderBook)
 
 
 # External dependencies
-add_subdirectory(extern/json)
-add_subdirectory(extern/spdlog)
+include(FetchContent)
+FetchContent_Declare(
+  nlohmann_json
+  GIT_REPOSITORY https://github.com/nlohmann/json.git
+  GIT_TAG        v3.12.0
+)
+FetchContent_Declare(
+  spdlog
+  GIT_REPOSITORY git@github.com:gabime/spdlog.git
+  GIT_TAG        v1.17.0
+)
+FetchContent_MakeAvailable(nlohmann_json)
+FetchContent_MakeAvailable(spdlog)
 
 # Dependencies
 add_subdirectory(order_book)
