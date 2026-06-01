@@ -21,7 +21,7 @@ target_sources(PollSocket
   BASE_DIRS
     include
   FILES
-    include/poll_socket/foo.hpp
+    include/poll_socket/ring_buffer.hpp
 )
 
 target_link_libraries(PollSocket

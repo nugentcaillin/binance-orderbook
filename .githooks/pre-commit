@@ -60,6 +60,9 @@ FAILED=0
 
 
 for FILE in $CHANGED_FILES; do
+    if [[ ! -f "$FILE" ]]; then
+        continue
+    fi
     if ! clang-format --dry-run --style=file -Werror "$FILE" > /dev/null 2>&1; then
         echo "$FILE did not pass clang-format, please run \"clang-format --style=file -i $FILE\""
         FAILED=1

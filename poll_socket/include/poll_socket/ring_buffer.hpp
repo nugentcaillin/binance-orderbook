@@ -1,6 +1,8 @@
-#ifndef POLL_SOCKET_CONNECTION_H
-#define POLL_SOCKET_CONNECTION_H
+#ifndef POLL_SOCKET_RING_BUFFER_H
+#define POLL_SOCKET_RING_BUFFER_H
 
+#include <array>
+#include <cstddef>
 #include <vector>
 
 namespace poll_socket {
@@ -11,15 +13,18 @@ namespace poll_socket {
  *
  * @warning not thread safe
  *
+ * @tparam N size of ring buffer
  */
-template
-<size_t buff_size>
+template <size_t N>
 class RingBuffer {
-private:
-    std::vector<char> buf_;
+   private:
+    std::array<char, N> buf_;
     size_t read_pos_;
     size_t write_pos_;
-public:
+
+   public:
+    RingBuffer();
+
     /**
      * @returns number of bytes that can be written without filling buffer or
      * wrapping round ring
@@ -35,7 +40,6 @@ public:
      * @note equals the amount that can be read by one send() syscall
      */
     size_t get_unread();
-
 
     /**
      * @returns naked pointer to write position
@@ -74,10 +78,12 @@ public:
      *
      * @warning throws exception if amount is greater than unread bytes
      */
-    void copy_bytes(std::vector<char>& dest, size_t offset, size_t amount);
+    void copy_bytes(std::vector<char> &dest, size_t offset, size_t amount);
 };
 
 
-} // namespace poll_socket
+}  // namespace poll_socket
 
-#endif // POLL_SOCKET_CONNECTION_H
+#include "ring_buffer.tpp"
+
+#endif  // POLL_SOCKET_RING_BUFFER_H
