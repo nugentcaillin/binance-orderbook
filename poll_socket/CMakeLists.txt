@@ -2,7 +2,11 @@ cmake_minimum_required(VERSION 3.23)
 
 project(PollSocket)
 
+
 # External dependencies
+# avoid building tests in dependencies
+set(BUILD_TESTING_BACKUP ${BUILD_TESTING})
+set(BUILD_TESTING OFF CACHE BOOL "Disable testing of external dependencies" FORCE)
 include(FetchContent)
 FetchContent_Declare(
   nlohmann_json
@@ -10,6 +14,8 @@ FetchContent_Declare(
   GIT_TAG        v3.12.0
 )
 FetchContent_MakeAvailable(spdlog)
+# restore BUILD_TESTING
+set(BUILD_TESTING ${BUILD_TESTING_BACKUP} CACHE BOOL "" FORCE)
 
 add_library(PollSocket)
 add_library(PollSocket::PollSocket ALIAS PollSocket)
@@ -28,3 +34,8 @@ target_link_libraries(PollSocket
   PRIVATE
   spdlog::spdlog
 )
+
+#build tests
+if(BUILD_TESTING)
+  add_subdirectory(tests)
+endif()

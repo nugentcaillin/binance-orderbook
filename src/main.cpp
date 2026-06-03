@@ -4,6 +4,6 @@
 
 int main() {
     spdlog::info("Hello, World!");
-    poll_socket::RingBuffer<1024> buf {};
+    poll_socket::RingBuffer<1024> buf{};
     return 0;
 }

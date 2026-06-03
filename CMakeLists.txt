@@ -18,6 +18,10 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(nlohmann_json)
 FetchContent_MakeAvailable(spdlog)
 
+if(BUILD_TESTING)
+  enable_testing()
+endif()
+
 # Dependencies
 add_subdirectory(order_book)
 add_subdirectory(poll_socket)

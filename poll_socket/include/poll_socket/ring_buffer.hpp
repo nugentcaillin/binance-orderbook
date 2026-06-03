@@ -81,7 +81,6 @@ class RingBuffer {
     void copy_bytes(std::vector<char> &dest, size_t offset, size_t amount);
 };
 
-
 }  // namespace poll_socket
 
 #include "ring_buffer.tpp"
