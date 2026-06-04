@@ -20,11 +20,12 @@ set(BUILD_TESTING ${BUILD_TESTING_BACKUP} CACHE BOOL "" FORCE)
 
 add_executable(
   PollSocketTests
-  test.cpp
+  ring_buffer.cpp
 )
 target_link_libraries(
   PollSocketTests
   GTest::gtest_main
+  PollSocket::PollSocket
 )
 
 include(GoogleTest)

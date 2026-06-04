@@ -20,7 +20,18 @@ class RingBuffer {
    private:
     std::array<char, N> buf_;
     size_t read_pos_;
+    /**
+     * @note position of last byte not written - when wrapping
+     * round not allowed to become equal to read pos as that would
+     * be indistinguishable from starting pos
+     */
     size_t write_pos_;
+
+    /**
+     * @returns whether write position has looped back round buffer and
+     * read is yet to catch up and do the same
+     */
+    bool is_write_wrapped();
 
    public:
     RingBuffer();
@@ -35,7 +46,8 @@ class RingBuffer {
     size_t get_space();
 
     /**
-     * @returns number of bytes that can be read without wrapping round ring
+     * @returns number of bytes that can be re+
+     * ad without wrapping round ring
      *
      * @note equals the amount that can be read by one send() syscall
      */
