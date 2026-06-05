@@ -8,31 +8,31 @@ project(PollSocket)
 set(BUILD_TESTING_BACKUP ${BUILD_TESTING})
 set(BUILD_TESTING OFF CACHE BOOL "Disable testing of external dependencies" FORCE)
 include(FetchContent)
-FetchContent_Declare(
-  nlohmann_json
-  GIT_REPOSITORY https://github.com/nlohmann/json.git
-  GIT_TAG        v3.12.0
-)
-FetchContent_MakeAvailable(spdlog)
-# restore BUILD_TESTING
-set(BUILD_TESTING ${BUILD_TESTING_BACKUP} CACHE BOOL "" FORCE)
+
+find_package(Boost REQUIRED)
+find_package(OpenSSL REQUIRED)
 
 add_library(PollSocket)
 add_library(PollSocket::PollSocket ALIAS PollSocket)
 
 
 target_sources(PollSocket
+  PRIVATE
+    src/socket_listener.cpp
   PUBLIC
   FILE_SET HEADERS
   BASE_DIRS
     include
   FILES
     include/poll_socket/ring_buffer.hpp
+    include/poll_socket/socket_listener.hpp
 )
 
 target_link_libraries(PollSocket
+  PUBLIC
+  Boost::headers
   PRIVATE
-  spdlog::spdlog
+  OpenSSL::SSL
 )
 
 #build tests

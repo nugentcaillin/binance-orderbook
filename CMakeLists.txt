@@ -18,6 +18,8 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(nlohmann_json)
 FetchContent_MakeAvailable(spdlog)
 
+find_package(Boost REQUIRED)
+
 if(BUILD_TESTING)
   enable_testing()
 endif()
@@ -39,4 +41,5 @@ target_link_libraries(BinanceOrderBook
   spdlog::spdlog
   OrderBook::OrderBook
   PollSocket::PollSocket
+  Boost::headers
 )

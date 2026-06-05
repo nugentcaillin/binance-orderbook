@@ -1,15 +1,14 @@
 #include <gtest/gtest.h>
+
 #include <poll_socket/ring_buffer.hpp>
 
 using namespace poll_socket;
 
-
 class RingBufferTest : public testing::Test {
-protected:
+   protected:
     static constexpr size_t BUF_SIZE = 10;
     static constexpr std::array<char, BUF_SIZE> CONTENT = {
-        '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'
-    };
+        '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'};
     static constexpr size_t WRITTEN = 8;
     static constexpr size_t READ = 6;
     static constexpr size_t WRITE_OVERFLOW = 4;
@@ -36,18 +35,13 @@ protected:
         written_read.advance_write_pos(WRITTEN);
         written_read.advance_read_pos(READ);
 
-
         // sub then add back one due to write not being allowed
         // to overflow to equal read
         written_overflow.advance_write_pos(BUF_SIZE - 1);
         written_overflow.advance_read_pos(READ);
         written_overflow.advance_write_pos(WRITE_OVERFLOW + 1);
-
-
     }
 };
-
-
 
 /* --- Basic functionality tests --- */
 TEST_F(RingBufferTest, NewBufferEmpty) {
@@ -74,28 +68,35 @@ TEST_F(RingBufferTest, AdvancingReadToEqualWriteDoesntThrow) {
 
 /* --- Wrapping logic tests --- */
 TEST_F(RingBufferTest, WriteWrappingRoundToGoPastReadThrows) {
-    ASSERT_THROW(written_read.advance_write_pos(BUF_SIZE - WRITTEN + READ + 1), std::out_of_range);
+    ASSERT_THROW(written_read.advance_write_pos(BUF_SIZE - WRITTEN + READ + 1),
+                 std::out_of_range);
 }
 TEST_F(RingBufferTest, WriteWrappingRoundToEqualReadThrows) {
-    ASSERT_THROW(written_read.advance_write_pos(BUF_SIZE - WRITTEN + READ), std::out_of_range);
+    ASSERT_THROW(written_read.advance_write_pos(BUF_SIZE - WRITTEN + READ),
+                 std::out_of_range);
 }
 TEST_F(RingBufferTest, WrappedWriteThrowsIfAttemptToGoPastRead) {
-    ASSERT_THROW(written_overflow.advance_write_pos(READ - WRITE_OVERFLOW + 1), std::out_of_range);
+    ASSERT_THROW(written_overflow.advance_write_pos(READ - WRITE_OVERFLOW + 1),
+                 std::out_of_range);
 }
 TEST_F(RingBufferTest, WrappedWriteThrowsIfAttemptToEqualRead) {
-    ASSERT_THROW(written_overflow.advance_write_pos(READ - WRITE_OVERFLOW), std::out_of_range);
+    ASSERT_THROW(written_overflow.advance_write_pos(READ - WRITE_OVERFLOW),
+                 std::out_of_range);
 }
 TEST_F(RingBufferTest, ReadWrappingRoundToGoPastWriteThrows) {
-    ASSERT_THROW(written_overflow.advance_read_pos(BUF_SIZE - READ + WRITE_OVERFLOW + 1), std::out_of_range);
+    ASSERT_THROW(
+        written_overflow.advance_read_pos(BUF_SIZE - READ + WRITE_OVERFLOW + 1),
+        std::out_of_range);
 }
 TEST_F(RingBufferTest, ReadWrappingRoundAllowsReadToEqualWriteDoesntThrow) {
-    ASSERT_NO_THROW(written_overflow.advance_read_pos(BUF_SIZE - READ + WRITE_OVERFLOW));
+    ASSERT_NO_THROW(
+        written_overflow.advance_read_pos(BUF_SIZE - READ + WRITE_OVERFLOW));
 }
 TEST_F(RingBufferTest, AdvanceReadNonWrappingDoesntThrowWithWrappedWrite) {
     ASSERT_NO_THROW(written_overflow.advance_read_pos(1));
 }
 TEST_F(RingBufferTest, WriteWrappedRoundMaxWriteSizeBringsWriteJustBeforeRead) {
-   ASSERT_EQ(written_overflow.get_space(), READ - WRITE_OVERFLOW - 1);
+    ASSERT_EQ(written_overflow.get_space(), READ - WRITE_OVERFLOW - 1);
 }
 TEST_F(RingBufferTest, WriteWrappedRoundMaxReadSizeReturnsEndOfBuf) {
     ASSERT_EQ(written_overflow.get_unread(), BUF_SIZE - READ);

@@ -1,9 +1,13 @@
 #include <spdlog/spdlog.h>
+#include <boost/asio.hpp>
 
 #include <poll_socket/ring_buffer.hpp>
+#include <poll_socket/socket_listener.hpp>
 
 int main() {
     spdlog::info("Hello, World!");
-    poll_socket::RingBuffer<1024> buf{};
+    boost::asio::io_context context;
+    poll_socket::SocketListener listener(context);
+    spdlog::info("Created listener without crashing!");
     return 0;
 }
