@@ -1,5 +1,6 @@
-#include <vector>
 #include <stdexcept>
+#include <vector>
+#include <cstring>
 
 #include "poll_socket/ring_buffer.hpp"
 
@@ -73,6 +74,21 @@ template <size_t N>
 void RingBuffer<N>::copy_bytes(std::vector<char> &dest, size_t offset,
                                size_t amount) {
     return;
+}
+
+template <size_t N>
+size_t RingBuffer<N>::fill_from(std::string src) {
+    const char *first_unfilled = src.c_str();
+    size_t remaining { src.size() };
+
+    while (remaining > 0 && get_space() > 0) {
+        size_t to_fill = std::min(remaining, get_space());
+        memcpy(get_write_pos(), first_unfilled, to_fill);
+        advance_write_pos(to_fill);
+        remaining -= to_fill;
+        first_unfilled += to_fill;
+    }
+    return src.size() - remaining;
 }
 
 }  // namespace poll_socket

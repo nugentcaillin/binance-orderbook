@@ -4,6 +4,7 @@
 #include <array>
 #include <cstddef>
 #include <vector>
+#include <string>
 
 namespace poll_socket {
 
@@ -91,6 +92,14 @@ class RingBuffer {
      * @warning throws exception if amount is greater than unread bytes
      */
     void copy_bytes(std::vector<char> &dest, size_t offset, size_t amount);
+
+    /**
+     * @brief copies a string into buff if possible
+     *
+     * @param src the string to copy from
+     * @returns the number of bytes copied from the string
+     */
+    size_t fill_from(std::string src);
 };
 
 }  // namespace poll_socket
