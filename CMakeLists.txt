@@ -1,0 +1,39 @@
+cmake_minimum_required(VERSION 4.3.4)
+
+project(binance-orderbook)
+
+add_library(libbinance)
+set_target_properties(libbinance PROPERTIES PREFIX "")
+
+target_sources(libbinance
+    PRIVATE
+        libbinance/libbinance/hello.cpp 
+    PUBLIC 
+        FILE_SET HEADERS
+        BASE_DIRS 
+            libbinance  
+        FILES 
+            libbinance/libbinance/hello.hpp
+)
+
+find_package(Boost REQUIRED)
+find_package(OpenSSL REQUIRED)
+find_package(spdlog REQUIRED)
+
+target_link_libraries(libbinance
+    PRIVATE 
+        boost::boost
+        openssl::openssl
+        spdlog::spdlog
+)
+
+
+add_executable(dummy)
+target_sources(dummy
+    PRIVATE
+        examples/dummy/main.cpp
+)
+target_link_libraries(dummy
+    PRIVATE 
+        libbinance
+)
