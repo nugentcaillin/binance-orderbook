@@ -1,5 +1,18 @@
 # Binance Orderbook
 A C++20 real time limit order book using level 2 market data from binance. Provides an order book interface with adapters to integrate with industry standard financial libraries.
+## Building and Running
+Install dependencies
+```bash
+conan install . --output-folder=build --build=missing
+```
+Build library and example
+```bash
+cmake --preset conan-release && cmake --build --preset conan-release
+```
+Run example
+```bash
+./build/dummy
+```
 # Component Diagram (C4)
 ```mermaid
 C4Context

@@ -1,8 +1,8 @@
 #include <libbinance/hello.hpp>
 
-#include <iostream>
+#include <spdlog/spdlog.h>
 
 void hello()
 {
-    std::cout << "Hello, World!\n";
+    spdlog::info("Hello, World!");
 }

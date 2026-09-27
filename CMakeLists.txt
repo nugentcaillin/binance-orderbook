@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.23)
+cmake_minimum_required(VERSION 4.3.4)
 
 project(binance-orderbook)
 
@@ -14,6 +14,17 @@ target_sources(libbinance
             libbinance  
         FILES 
             libbinance/libbinance/hello.hpp
+)
+
+find_package(Boost REQUIRED)
+find_package(OpenSSL REQUIRED)
+find_package(spdlog REQUIRED)
+
+target_link_libraries(libbinance
+    PRIVATE 
+        boost::boost
+        openssl::openssl
+        spdlog::spdlog
 )
 
 

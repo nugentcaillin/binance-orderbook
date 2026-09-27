@@ -1,0 +1,8 @@
+[requires]
+openssl/3.6.3
+boost/1.91.0
+spdlog/1.17.0
+
+[generators]
+CMakeDeps
+CMakeToolchain
